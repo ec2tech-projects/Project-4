@@ -217,7 +217,7 @@ sudo apt-get install trivy -y
 
 #
 - <b> Again, add Github credentials to push updated code from the pipeline:</b>
-![image](https://github.com/user-attachments/assets/f4585437-f448-4ace-b47b-e3c8848f79f6)
+![image](https://github.com/user-attachments/assets/436ed0b8-4a1e-446a-954f-8770c56d389c)
 > [!Note]
 > While adding github credentials add Personal Access Token in the password field.
 #
@@ -273,9 +273,8 @@ sudo apt-get install trivy -y
 #
 - <b>Go to <mark>Settings --> Repositories</mark> and click on <mark>Connect repo</mark> </b>
 ![image](https://github.com/user-attachments/assets/cc8728e5-546b-4c46-bd4c-538f4cd6a63d)
-![image](https://github.com/user-attachments/assets/5694932c-2268-454c-97c8-49c9b95a9ee1)
-![image](https://github.com/user-attachments/assets/7c75290d-1768-4288-aebd-7a4ffc1369b4)
-
+![image](https://github.com/user-attachments/assets/fbe129c5-b211-4424-a85b-a545cfc6fd94)
+![image](https://github.com/user-attachments/assets/909b9caf-a1ae-4043-b0c2-5e7ccd9b19b1)
 
 > [!Note]
 > Connection should be successful
@@ -298,11 +297,11 @@ chmod 777 /var/run/docker.sock
 > [!Important]
 > Make sure to click on the <mark>Auto-Create Namespace</mark> option while creating argocd application
 
-![image](https://github.com/user-attachments/assets/b9b014e9-feea-48bf-9485-dd104e5d1a95)
+![image](https://github.com/user-attachments/assets/ac9fccba-3f1d-4523-bf40-06828d21f5e1)
 
 
 - <b>Congratulations, your application is deployed on AWS EKS Cluster</b>
-![image](https://github.com/user-attachments/assets/13314cb8-1533-4074-99be-cf2c58f77e7b)
+![image](https://github.com/user-attachments/assets/8e75f572-3ffc-429a-b7c1-6db31b9dd95f)
 
 
 - <b>Open port 8080 on worker node and Access it on browser</b>
