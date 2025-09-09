@@ -1,0 +1,87 @@
+pipeline {
+    agent any
+
+    parameters {
+        choice(
+            name: 'Terraform-Action',
+            choices: ['apply', 'destroy'],
+            description: 'Select whether to apply or destroy the Terraform plan'
+        )
+    }
+
+    stages {
+        stage('Git Clone') {
+            steps {
+                git branch: 'main', url: 'https://github.com/ec2tech-projects/Project-4.git'
+            }
+        }
+        
+        
+        stage('Initializing Terraform') {
+            steps {
+                withAWS(credentials: 'aws-key', region: 'us-east-1') {
+                dir('Terraform') {
+                    script {
+                        sh 'terraform init'
+                    }
+                }
+                }
+            }
+        }
+        
+        stage('Validate Terraform Code') {
+            steps {
+                withAWS(credentials: 'aws-key', region: 'us-east-1') {
+                dir('Terraform') {
+                    script {
+                        sh 'terraform validate'
+                    }
+                }
+                }
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                withAWS(credentials: 'aws-key', region: 'us-east-1') {
+                dir('Terraform') {
+                    script {
+                        sh "terraform plan -out=tfplan"
+                    }
+                }
+                }
+            }
+        }
+        
+
+        stage('Approval') {
+            steps {
+                script {
+                    input message: "Do you want to proceed with terraform ${params.Action}?", ok: "Yes, proceed"
+                }
+            }
+        }
+
+        stage('Terraform Action') {
+            steps {
+                withAWS(credentials: 'aws-key', region: 'us-east-1') { 
+                script {
+                    echo "${params.'Terraform-Action'}"
+                    dir('Terraform') {
+                        script {
+                            if (params.'Terraform-Action' == 'apply') {
+                                sh "terraform ${params.'Terraform-Action'} -auto-approve"
+                            } else if (params.'Terraform-Action' == 'destroy') {
+                                sh "terraform ${params.'Terraform-Action'} -auto-approve"
+                            } else {
+                                error "Invalid value for Terraform-Action: ${params.'Terraform-Action'}"
+                            }
+                        }
+                    }
+                }
+                }
+            }
+        }
+        
+    }
+}

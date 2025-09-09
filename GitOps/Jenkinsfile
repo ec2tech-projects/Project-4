@@ -1,0 +1,69 @@
+@Library('Shared') _
+pipeline {
+    agent any
+    
+    parameters {
+        string(name: 'DOCKER_TAG', defaultValue: '', description: 'Docker tag of the image built by the CI job')
+    }
+
+    stages {
+        stage("Workspace cleanup"){
+            steps{
+                script{
+                    cleanWs()
+                }
+            }
+        }
+        
+        stage('Git: Code Checkout') {
+            steps {
+                script{
+                    code_checkout("https://github.com/ec2tech-projects/Project-4.git","main")
+                }
+            }
+        }
+        
+        stage('Verify: Docker Image Tags') {
+            steps {
+                script{
+                    echo "DOCKER TAG RECEIVED: ${params.DOCKER_TAG}"
+                }
+            }
+        }
+        
+        
+        stage("Update: Kubernetes manifest"){
+            steps{
+                script{
+                    dir('kubernetes'){
+                        sh """
+                            sed -i -e 's|apatranobis59/bankapp:.*|apatranobis59/bankapp:${params.DOCKER_TAG}|g' bankapp-deployment.yaml
+                        """
+                    }
+                }
+            }
+        }
+        
+        stage("Git: Code update and push to GitHub"){
+            steps{
+                script{
+                    withCredentials([gitUsernamePassword(credentialsId: 'Github-cred', gitToolName: 'Default')]) {
+                        sh '''
+                        echo "Checking repository status: "
+                        git status
+                    
+                        echo "Adding changes to git: "
+                        git add .
+                        
+                        echo "Commiting changes: "
+                        git commit -m "Updated K8s Deployment Docker Image Version"
+                        
+                        echo "Pushing changes to github: "
+                        git push https://github.com/ec2tech-projects/Project-4.git main
+                    '''
+                    }
+                }
+            }
+        }
+    }
+}
