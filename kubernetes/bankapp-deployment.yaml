@@ -16,7 +16,7 @@ spec:
         app: bankapp-deploy
     spec:
       containers:
-      - image: apatranobis59/bankapp:v2
+      - image: apatranobis59/bankapp:v3
         name: bankapp
         ports:
         - containerPort: 8080
